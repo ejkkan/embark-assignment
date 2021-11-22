@@ -6,21 +6,15 @@ import { GET_XKCD } from "./constants";
 
 const useXKCD = () => {
   const router = useRouter();
-  console.log("router", router.basePath);
   return useMutation(
     GET_XKCD,
     async (param?: string) => {
+      // Implement env variables for environtment handling instead of values like window.location
       return await fetcher(
         `${window.location}/api/strip${param ? `?specificId=${param}` : ""}`
       );
     },
     {
-      onSuccess: () => {
-        console.log("DATA SUCCESSFULLY FETCHED");
-      },
-      onError: (e: any) => {
-        console.log("DATA ERROR", e);
-      },
       retry: false,
     }
   );
