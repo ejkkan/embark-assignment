@@ -1,3 +1,3 @@
-import { useXKCD } from "./getXKCD";
-
-export { useXKCD };
+import { useGetOne } from "./getOne";
+import { useGetRandom } from "./getRandom";
+export { useGetOne, useGetRandom };

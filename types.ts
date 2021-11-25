@@ -11,3 +11,8 @@ export type Strip = {
   transcript: string;
   year: string;
 };
+
+export type Data = {
+  strip: Strip | null;
+  current: number;
+};

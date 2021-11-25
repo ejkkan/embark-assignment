@@ -2,32 +2,42 @@ import * as React from "react";
 import Paper from "./Paper";
 import Divider from "@mui/material/Divider";
 import MenuList from "@mui/material/MenuList";
-import SendIcon from "@mui/icons-material/Send";
 import { Typography, Box } from "@mui/material";
 import Image from "next/image";
 import MenuItem from "./MenuItem";
-import { useXKCD } from "../queries";
+import { useGetOne, useGetRandom } from "../queries";
 import StripInformation from "./StripInformation";
 import Loader from "./Loaders";
 import ImageModal from "./ImageModal";
 import { NavigateNext, BlurOnOutlined } from "@mui/icons-material";
+import { Strip, Data } from "../types";
 
 const StripeWrapper: React.FC = () => {
-  const { data, isLoading, mutate } = useXKCD();
-  const [zoomedImage, setZoomedImage] = React.useState(null);
+  const [currentData, setData] = React.useState<null | Data>(null);
+  const [zoomedImage, setZoomedImage] = React.useState<string | null>(null);
+  const {
+    // Both queries are using the same queryKey, making it possible to reuse the same value
+    // Maybe not the easiet code to understand, but it keeps the code amount down
+    data,
+    isLoading: getRandomLoading,
+    refetch: getRandom,
+  } = useGetRandom();
+  const { isLoading: oneStripLoading, refetch: getOne } = useGetOne(
+    String(currentData?.current ? currentData?.current + 1 : 1)
+  );
+
   React.useEffect(() => {
-    mutate("");
-  }, []);
+    getRandom();
+  }, [getRandom]);
 
-  const onNextClick = () => {
-    mutate(current + 1);
-  };
-  const onRandomClick = () => {
-    mutate("");
-  };
+  React.useEffect(() => setData(data), [data?.strip?.num, setData]);
 
-  if (isLoading || !data) return <Loader />;
-  const { current, strip } = data;
+  const onNextClick = () => getOne();
+
+  const onRandomClick = () => getRandom();
+
+  if (oneStripLoading || getRandomLoading || !currentData) return <Loader />;
+  const strip = currentData?.strip as Strip;
 
   return (
     <Paper>
@@ -64,7 +74,7 @@ const StripeWrapper: React.FC = () => {
 
           <MenuItem
             text="Random"
-            //Can't find "random" icon
+            //Can't find "random" icon :(
             icon={<BlurOnOutlined color="primary" />}
             onClick={onRandomClick}
           />

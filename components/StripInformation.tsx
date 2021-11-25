@@ -7,11 +7,14 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Strip } from "../types";
 import { Divider } from "@mui/material";
 import { Box } from "@mui/system";
+import Loader from "./Loaders";
 
 interface StripInformation {
-  strip: Strip;
+  strip: Strip | null;
 }
+
 const StripInformation: React.FC<StripInformation> = ({ strip }) => {
+  if (strip === null) return <Loader />;
   return (
     <Accordion sx={{ backgroundColor: "rgb(18, 18, 18)", boxShadow: "none" }}>
       <AccordionSummary

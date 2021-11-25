@@ -1,1 +1,1 @@
-export const GET_XKCD = "GET_XKCD";
+export const GET_STRIP = "GET_STRIP";
